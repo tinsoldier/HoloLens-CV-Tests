@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\CameraCapture.cs" />
+     <Compile Include="Assets\ManualCapture.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity Hololens 5.4.0b10-HTP/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

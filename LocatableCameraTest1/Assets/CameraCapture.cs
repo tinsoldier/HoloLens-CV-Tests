@@ -1,5 +1,6 @@
 ﻿// ReSharper disable CheckNamespace
 
+using System.Collections;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
@@ -11,57 +12,85 @@ using UnityEngine.VR.WSA.WebCam;
 /// </summary>
 public class CameraCapture : MonoBehaviour
 {
-
-    public Text TextObject;
+    //TODO: Nonsensical to give knowledge of the Text element to this Behavior, should be abstracted (e.g. piggybacking off Debug.Log)
+    public Text DebugText;
+    [Tooltip("Enable automatic capturing of camera images.")]
+    public bool AutoCapture;
+    [Tooltip("Time in milliseconds to wait between image captures.")]
+    [Range(0, 5000)]
+    public int RefreshMs = 100;
 
     private PhotoCapture _photoCaptureObject;
     private GestureRecognizer _gestureRecognizer;
     private bool _photoModeStarted;
+    private bool _autoCaptureStarted;
     
     void Start ()
     {
         Debug.Log("Start - CameraCapture");
         Debug.Log("Pictures will be stored at: " + Application.persistentDataPath);
 
-        _gestureRecognizer = new GestureRecognizer();
-        _gestureRecognizer.TappedEvent += (source, tapCount, ray) =>
-        {
-            TakePicture();
-        };
-        _gestureRecognizer.StartCapturingGestures();
-
         PhotoCapture.CreateAsync(false, OnPhotoCaptureCreated);
-    }
 
-    void Update()
-    {
-        if (Input.GetButtonDown("Fire1"))
+        if (AutoCapture)
         {
-            TakePicture();
+            StartAutomaticCapture();
         }
     }
 
-    void TakePicture()
+    public void StartAutomaticCapture()
     {
+        if (_autoCaptureStarted)
+        {
+            return;
+        }
+
+        _autoCaptureStarted = true;
+        StartCoroutine(AutomaticCaptureRoutine());
+    }
+
+    public void StopAutomaticCapture()
+    {
+        if (!_autoCaptureStarted)
+        {
+            return;
+        }
+
+        _autoCaptureStarted = false;
+        StopCoroutine("AutomaticCaptureRoutine");
+    }
+
+    private IEnumerator AutomaticCaptureRoutine()
+    {
+        while(true)
+        {
+            TakePicture();
+            yield return new WaitForSeconds(RefreshMs / 1000f);
+        }
+    }
+
+    public void TakePicture()
+    {
+        Debug.Log("Taking picture...");
         if (_photoModeStarted)
         {
-            string filename = string.Format(@"CapturedImage{0}_n.jpg", Time.time);
-            string filePath = System.IO.Path.Combine(Application.persistentDataPath, filename);
+            var filename = string.Format(@"CapturedImage{0}_n.jpg", Time.time);
+            var filePath = System.IO.Path.Combine(Application.persistentDataPath, filename);
 
             _photoCaptureObject.TakePhotoAsync(filePath, PhotoCaptureFileOutputFormat.JPG, OnCapturedPhotoToDisk);
         }
     }
 
-    void OnPhotoCaptureCreated(PhotoCapture captureObject)
+    private void OnPhotoCaptureCreated(PhotoCapture captureObject)
     {
         Debug.Log("OnPhotoCaptureCreated");
         _photoCaptureObject = captureObject;
 
         //TODO: Try enumerating all of the support resolutions (in OnStart), we may not need the highest resolution for what we're doing
         //Grab highest resolution camera
-        Resolution cameraResolution = PhotoCapture.SupportedResolutions.OrderByDescending((res) => res.width * res.height).First();
+        var cameraResolution = PhotoCapture.SupportedResolutions.OrderByDescending((res) => res.width * res.height).First();
 
-        CameraParameters c = new CameraParameters
+        var cameraParameters = new CameraParameters
         {
             hologramOpacity = 0.0f,
             cameraResolutionWidth = cameraResolution.width,
@@ -69,7 +98,7 @@ public class CameraCapture : MonoBehaviour
             pixelFormat = CapturePixelFormat.BGRA32
         };
 
-        captureObject.StartPhotoModeAsync(c, false, OnPhotoModeStarted);
+        captureObject.StartPhotoModeAsync(cameraParameters, false, OnPhotoModeStarted);
     }
 
     private void OnPhotoModeStarted(PhotoCapture.PhotoCaptureResult result)
@@ -108,9 +137,9 @@ public class CameraCapture : MonoBehaviour
 
     private void SetDebugText(string text)
     {
-        if (TextObject != null)
+        if (DebugText != null)
         {
-            TextObject.text = text;
+            DebugText.text = text;
         }
     }
 
