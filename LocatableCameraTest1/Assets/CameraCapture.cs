@@ -11,7 +11,7 @@ using UnityEngine.VR.WSA.WebCam;
 using Debug = UnityEngine.Debug;
 
 /// <summary>
-/// Camera script that will initialize the camera system and take pictures with each Tap gesture and Fire1 press
+/// Camera script that will initialize the camera system and take pictures.
 /// </summary>
 public class CameraCapture : MonoBehaviour
 {
