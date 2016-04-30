@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{6D69B5E3-CB35-822E-6E17-58BDD3EC30B5}") = "LocatableCameraTest1", "Assembly-CSharp.csproj", "{B7626AE8-AECD-3A94-71B6-3D76AEB8044B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B7626AE8-AECD-3A94-71B6-3D76AEB8044B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7626AE8-AECD-3A94-71B6-3D76AEB8044B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7626AE8-AECD-3A94-71B6-3D76AEB8044B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7626AE8-AECD-3A94-71B6-3D76AEB8044B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
