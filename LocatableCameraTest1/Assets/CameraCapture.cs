@@ -84,7 +84,7 @@ public class CameraCapture : MonoBehaviour
     public void TakePicture()
     {
         Debug.Log("Taking picture...");
-        if (_photoModeStarted)
+        if (_photoModeStarted && _photoCaptureObject != null)
         {
             if (CaptureMode == CaptureModeType.File)
             {
@@ -171,6 +171,7 @@ public class CameraCapture : MonoBehaviour
                 cameraToWorld = Camera.main.cameraToWorldMatrix;
             }
 
+            //TODO: This creates a square quad but the captured image probably isn't square.  Should resize quad to match the proportions of the image.
             GameObject quadGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
             quadGameObject.transform.position = cameraToWorld.MultiplyPoint(Vector3.zero); //place the new object at the location of the camera
             quadGameObject.transform.forward = cameraToWorld.MultiplyVector(Vector3.back); //use back so the image is facing the camera
@@ -181,6 +182,7 @@ public class CameraCapture : MonoBehaviour
                 quadRenderer.material.mainTexture = targetTexture;
             }
 
+            //Add a list for easy access/cleanup later.
             _gameObjects.Add(quadGameObject);
         }
         
