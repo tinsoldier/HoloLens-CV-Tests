@@ -8,7 +8,6 @@ using UnityEngine;
 using System.Linq;
 using UnityEditor.VersionControl;
 using UnityEngine.UI;
-using UnityEngine.VR.WSA.Input;
 using UnityEngine.VR.WSA.WebCam;
 using Debug = UnityEngine.Debug;
 
@@ -28,7 +27,6 @@ public class CameraCapture : MonoBehaviour
     public CaptureModeType CaptureMode;
 
     private PhotoCapture _photoCaptureObject;
-    private GestureRecognizer _gestureRecognizer;
     private bool _photoModeStarted;
     private bool _autoCaptureStarted;
     private List<GameObject> _gameObjects = new List<GameObject>();
@@ -134,6 +132,7 @@ public class CameraCapture : MonoBehaviour
         //TODO: Try enumerating all of the support resolutions (in OnStart), we may not need the highest resolution for what we're doing
         //Grab highest resolution camera
         var cameraResolution = PhotoCapture.SupportedResolutions.OrderByDescending((res) => res.width * res.height).First();
+        //var cameraResolution = PhotoCapture.SupportedResolutions.First(r => r.width == 640 && r.height == 480);
 
         var cameraParameters = new CameraParameters
         {

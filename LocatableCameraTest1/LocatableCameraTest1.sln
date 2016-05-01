@@ -1,7 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{6D69B5E3-CB35-822E-6E17-58BDD3EC30B5}") = "LocatableCameraTest1", "Assembly-CSharp.csproj", "{B7626AE8-AECD-3A94-71B6-3D76AEB8044B}"
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocatableCameraTest1.CSharp", "LocatableCameraTest1.CSharp.csproj", "{75DAED90-9014-37A0-C907-9EBB9860BC31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,15 +9,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B7626AE8-AECD-3A94-71B6-3D76AEB8044B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7626AE8-AECD-3A94-71B6-3D76AEB8044B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7626AE8-AECD-3A94-71B6-3D76AEB8044B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7626AE8-AECD-3A94-71B6-3D76AEB8044B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75DAED90-9014-37A0-C907-9EBB9860BC31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75DAED90-9014-37A0-C907-9EBB9860BC31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75DAED90-9014-37A0-C907-9EBB9860BC31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75DAED90-9014-37A0-C907-9EBB9860BC31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections;
 
 /// <summary>
 /// Represents a threaded worker that can interface nicely with Unity Behaviors
