@@ -3,8 +3,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using UnityEngine;
 using System.Linq;
+using UnityEditor.VersionControl;
 using UnityEngine.UI;
 using UnityEngine.VR.WSA.Input;
 using UnityEngine.VR.WSA.WebCam;
@@ -15,12 +17,6 @@ using Debug = UnityEngine.Debug;
 /// </summary>
 public class CameraCapture : MonoBehaviour
 {
-    public enum CaptureModeType
-    {
-        File,
-        SceneObject
-    }
-
     //TODO: Nonsensical to give knowledge of the Text element to this Behavior, should be abstracted (e.g. piggybacking off Debug.Log)
     public Text DebugText;
     [Tooltip("Enable automatic capturing of camera images.")]
@@ -37,7 +33,7 @@ public class CameraCapture : MonoBehaviour
     private bool _autoCaptureStarted;
     private List<GameObject> _gameObjects = new List<GameObject>();
     
-    void Start ()
+    private void Start ()
     {
         Debug.Log("Start - CameraCapture");
         Debug.Log("Pictures will be stored at: " + Application.persistentDataPath);
@@ -72,15 +68,6 @@ public class CameraCapture : MonoBehaviour
         StopCoroutine("AutomaticCaptureRoutine");
     }
 
-    private IEnumerator AutomaticCaptureRoutine()
-    {
-        while(true)
-        {
-            TakePicture();
-            yield return new WaitForSeconds(RefreshMs / 1000f);
-        }
-    }
-
     public void TakePicture()
     {
         Debug.Log("Taking picture...");
@@ -95,6 +82,46 @@ public class CameraCapture : MonoBehaviour
             else
             {
                 _photoCaptureObject.TakePhotoAsync(OnCapturedPhotoToMemory);
+            }
+        }
+    }
+
+
+    private IEnumerator AutomaticCaptureRoutine()
+    {
+        var processingTime = 0f;
+        while (true)
+        {
+            var refreshInSeconds = RefreshMs / 1000f; //recalc every loop in case code changes this value in the background
+            yield return new WaitForSeconds(Mathf.Max(refreshInSeconds - processingTime, 0f));
+
+            //Track start and end time, subtract the total image processing time from the RefreshMS value above to level off processing rate
+            var startTime = Time.time;
+
+            //Acquire an image
+            TakePicture();
+
+            //Process the image to find tags
+            var job = new FindImageTagsJob();
+            job.Start();
+
+            //Wait for the processing to complete
+            yield return job.WaitFor();
+            Debug.Log("Async Processing Done.");
+
+            //Job processing is now done, collect and process results
+
+            //See above, tracking processing time
+            var endTime = Time.time;
+            processingTime = endTime - startTime;
+            if (processingTime > refreshInSeconds)
+            {
+                Debug.LogWarning("Image processing is falling behind desired refresh rate.");
+            }
+
+            if (!AutoCapture)
+            {
+                break;
             }
         }
     }
@@ -135,7 +162,7 @@ public class CameraCapture : MonoBehaviour
         }
     }
 
-    void OnCapturedPhotoToDisk(PhotoCapture.PhotoCaptureResult result)
+    private void OnCapturedPhotoToDisk(PhotoCapture.PhotoCaptureResult result)
     {
         if (result.success)
         {
@@ -153,7 +180,7 @@ public class CameraCapture : MonoBehaviour
         }
     }
 
-    void OnCapturedPhotoToMemory(PhotoCapture.PhotoCaptureResult result, PhotoCaptureFrame photoCaptureFrame)
+    private void OnCapturedPhotoToMemory(PhotoCapture.PhotoCaptureResult result, PhotoCaptureFrame photoCaptureFrame)
     {
         if (result.success)
         {
@@ -199,7 +226,7 @@ public class CameraCapture : MonoBehaviour
         }
     }
 
-    void OnStoppedPhotoMode(PhotoCapture.PhotoCaptureResult result)
+    private void OnStoppedPhotoMode(PhotoCapture.PhotoCaptureResult result)
     {
         _photoCaptureObject.Dispose();
         _photoCaptureObject = null;
