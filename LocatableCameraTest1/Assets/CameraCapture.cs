@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
 using System.Linq;
-using UnityEditor.VersionControl;
 using UnityEngine.UI;
 using UnityEngine.VR.WSA.WebCam;
 using Debug = UnityEngine.Debug;

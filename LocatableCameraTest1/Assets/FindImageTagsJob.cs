@@ -8,7 +8,7 @@ class FindImageTagsJob : ThreadedJob
 {
     protected override void ThreadFunction()
     {
-        System.Threading.Thread.Sleep(250);
+        //System.Threading.Thread.Sleep(250);
     }
 
     protected override void OnFinished()

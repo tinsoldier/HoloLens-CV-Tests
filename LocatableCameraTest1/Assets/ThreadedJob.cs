@@ -1,4 +1,9 @@
 ﻿using System.Collections;
+#if NETFX_CORE
+  using Windows.System.Threading;
+#else
+    using System.Threading;
+#endif
 
 /// <summary>
 /// Represents a threaded worker that can interface nicely with Unity Behaviors
@@ -13,7 +18,7 @@ public class ThreadedJob
 {
     private bool _isDone;
     private readonly object _handle = new object();
-    private System.Threading.Thread _thread;
+    //private System.Threading.Thread _thread;
 
     public bool IsDone
     {
@@ -37,12 +42,22 @@ public class ThreadedJob
 
     public virtual void Start()
     {
-        _thread = new System.Threading.Thread(Run);
-        _thread.Start();
+        //ThreadPool.QueueUserWorkItem(_ => Run());
+
+#if !NETFX_CORE
+        ThreadPool.QueueUserWorkItem(_ => Run());
+#else
+  var asyncAction = Windows.System.Threading.ThreadPool.RunAsync((workItem) =>
+  {
+  Run();
+  });
+  //m_workItem = asyncAction;
+#endif
     }
+
     public virtual void Abort()
     {
-        _thread.Abort();
+        //_thread.Abort();
     }
 
     protected virtual void ThreadFunction() { }
