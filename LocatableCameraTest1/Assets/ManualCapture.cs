@@ -13,6 +13,7 @@ public class ManualCapture : MonoBehaviour
         _cameraCapture = GetComponent<CameraCapture>();
 
         _gestureRecognizer = new GestureRecognizer();
+        _gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap);
         _gestureRecognizer.TappedEvent += (source, tapCount, ray) =>
         {
             TakePicture();
